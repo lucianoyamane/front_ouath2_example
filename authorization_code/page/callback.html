@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login Sucesso</title>
+     <!-- Arquivos CSS do Bootstrap -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+     <!-- Arquivos JavaScript do Bootstrap -->
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+     <style>
+      body {
+        font-size: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <pre id="params"></pre>
+          <button class="btn btn-primary" onclick="getToken()">Obter Token</button>
+          <pre id="response"></pre>
+          <a href="http://localhost:8180/realms/oauth2_front/protocol/openid-connect/logout" class="btn btn-danger">Logout</a>
+        </div>
+      </div>
+    </div>
+    <script>
+      function getToken() {
+        // Obter os parâmetros de consulta da URL como um objeto
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramsObj = {};
+        for (const [key, value] of urlParams) {
+          paramsObj[key] = value;
+        }
+
+        // Fazer uma requisição POST para o endpoint de token do Keycloak
+        const data = new URLSearchParams();
+        data.append('client_id', 'client_auth_code');
+        data.append('client_secret', 'WIRwBWu9HExX9Dy3nSSjOMA9D7M3jalQ');
+        data.append('grant_type', 'authorization_code');
+        data.append('redirect_uri', 'http://localhost:3600/callback.html')
+        data.append('code', paramsObj['code']);
+
+        fetch('http://localhost:8180/realms/oauth2_front/protocol/openid-connect/token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: data
+        })
+        .then(response => response.json())
+        .then(json => {
+          // Exibir a resposta da requisição como um texto abaixo do botão
+          const responseText = JSON.stringify(json, null, 2);
+          document.getElementById('response').textContent = responseText;
+        })
+        .catch(error => console.error(error));
+      }
+
+      // Exibir os parâmetros de consulta da URL como um objeto JSON
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramsObj = {};
+      for (const [key, value] of urlParams) {
+        paramsObj[key] = value;
+      }
+
+      const paramsJson = JSON.stringify(paramsObj, null, 2);
+      document.getElementById('params').textContent = paramsJson;
+    </script>
+  </body>
+</html>

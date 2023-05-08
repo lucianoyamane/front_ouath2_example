@@ -1,0 +1,5 @@
+services:
+  authorizationcodeexample:
+    build: .
+    ports:
+      - "3600:80"

@@ -1,0 +1,5 @@
+services:
+  implicitexample:
+    build: .
+    ports:
+      - "3700:80"

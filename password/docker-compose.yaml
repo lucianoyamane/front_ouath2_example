@@ -1,0 +1,5 @@
+services:
+  passwordexample:
+    build: .
+    ports:
+      - "3800:80"
